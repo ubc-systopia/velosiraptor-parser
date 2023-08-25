@@ -140,6 +140,11 @@ impl VelosiParseTreeInterfaceLayout {
     pub fn new(actions: Vec<VelosiParseTreeFieldSlice>) -> Self {
         Self::with_loc(actions, VelosiTokenStream::default())
     }
+
+    /// checks whether the layout has slices defined
+    pub fn is_empty(&self) -> bool {
+        self.slices.is_empty()
+    }
 }
 
 /// Implementation of [Display] for [VelosiParseTreeInterfaceLayout]

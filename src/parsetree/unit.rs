@@ -167,6 +167,24 @@ pub enum VelosiParseTreeUnitNode {
     Type(VelosiParseTreeExternType),
 }
 
+impl VelosiParseTreeUnitNode {
+    pub fn loc(&self) -> &VelosiTokenStream {
+        use VelosiParseTreeUnitNode::*;
+        match self {
+            Const(c) => &c.loc,
+            InBitWidth(_, l) => l,
+            OutBitWidth(_, l) => l,
+            Flags(f) => &f.loc,
+            State(s) => &s.loc,
+            Interface(i) => &i.loc,
+            Method(m) => &m.loc,
+            Map(m) => m.loc(),
+            EnumEntry(e) => &e.loc,
+            Type(t) => &t.loc,
+        }
+    }
+}
+
 /// Implement [Display] for [VelosiParseTreeUnitNode]
 impl Display for VelosiParseTreeUnitNode {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {

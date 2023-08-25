@@ -7,7 +7,7 @@ on:
 name: Unit Tests (libvelosiparser)
 jobs:
   compile_and_test:
-    name: "libvelosiparser"
+    name: "parser"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
