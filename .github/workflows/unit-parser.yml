@@ -4,7 +4,7 @@ on:
       - main
   pull_request:
 
-name: Unit Tests (libvelosiparser)
+name: Unit Tests (parser)
 jobs:
   compile_and_test:
     name: "parser"
@@ -16,7 +16,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - name: libvelosiparser_test
+      - name: parser_test
         uses: actions-rs/cargo@v1
         with:
           command: test
