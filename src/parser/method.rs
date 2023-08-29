@@ -40,8 +40,8 @@ use crate::error::IResult;
 use crate::parser::expr::{expr, quantifier_expr};
 use crate::parser::parameter::param_list;
 use crate::parser::terminals::{
-    comma, hashtag, ident, kw_abstract, kw_ensures, kw_fn, kw_requires, kw_synth, lbrace, lbrack,
-    lparen, rarrow, rbrace, rbrack, rparen, semicolon, typeinfo,
+    comma, hashtag, ident, kw_abstract, kw_ensures, kw_extern, kw_fn, kw_requires, kw_synth,
+    lbrace, lbrack, lparen, rarrow, rbrace, rbrack, rparen, semicolon, typeinfo,
 };
 use crate::parsetree::{VelosiParseTreeExpr, VelosiParseTreeMethod, VelosiParseTreeMethodProperty};
 use crate::VelosiTokenStream;
@@ -72,7 +72,7 @@ use crate::VelosiTokenStream;
 ///
 /// # Grammar
 ///
-/// `METHOD := DECORATOR_LIST KW_ABSTRACT? KW_SYNTH? KW_FN IDENT LPAREN ARGLIST RPAREN RARROW TYPE REQUIRES* ENSURES* METHOD_BODY`
+/// `METHOD := DECORATOR_LIST METHOD_MODIFIERS? KW_FN IDENT LPAREN ARGLIST RPAREN RARROW TYPE REQUIRES* ENSURES* METHOD_BODY`
 ///
 /// # Examples
 ///
@@ -85,8 +85,9 @@ pub fn method(input: VelosiTokenStream) -> IResult<VelosiTokenStream, VelosiPars
     // parse the decorator #[foo]
     let (i0, props) = opt(decorator_list)(input)?;
 
-    // parse and consume fn keyword
-    let (i1, (abs, synth, _)) = tuple((opt(kw_abstract), opt(kw_synth), kw_fn))(i0)?;
+    // parse the method keyword and its modifiers
+    let (i1, (has_extern, has_abstract, has_synth, _)) =
+        tuple((opt(kw_extern), opt(kw_abstract), opt(kw_synth), kw_fn))(i0)?;
 
     // get the method identifier, fail if there is not an identifier
     let (i2, name) = cut(ident)(i1)?;
@@ -111,8 +112,9 @@ pub fn method(input: VelosiTokenStream) -> IResult<VelosiTokenStream, VelosiPars
     let method = VelosiParseTreeMethod {
         name,
         properties: props.unwrap_or_default(),
-        is_abstract: abs.is_some(),
-        is_synth: synth.is_some(),
+        is_abstract: has_abstract.is_some(),
+        is_synth: has_synth.is_some(),
+        is_extern: has_extern.is_some(),
         params,
         rettype,
         requires,
