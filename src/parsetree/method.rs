@@ -51,6 +51,8 @@ pub struct VelosiParseTreeMethod {
     pub is_abstract: bool,
     /// whether this is a method to be synthesized
     pub is_synth: bool,
+    /// whether the method is externally defined
+    pub is_extern: bool,
     /// the unit parameters
     pub params: Vec<VelosiParseTreeParam>,
     /// the name of the derrived unit
@@ -81,6 +83,10 @@ impl Display for VelosiParseTreeMethod {
                 }
             }
             writeln!(f, "]")?;
+        }
+
+        if self.is_extern {
+            write!(f, "extern ")?;
         }
 
         if self.is_abstract {

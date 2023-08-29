@@ -19,10 +19,28 @@ segment MyUnit {
     true
   }
 
+  extern fn foo() -> bool
+    requires true
+
+  extern fn foo() -> bool
+    requires true
+  {
+    true
+  }
+
   abstract synth fn foo() -> bool
     requires true
 
   abstract synth fn foo() -> bool
+    requires true
+  {
+    true
+  }
+
+  extern abstract synth fn foo() -> bool
+    requires true
+
+  extern abstract synth fn foo() -> bool
     requires true
   {
     true
