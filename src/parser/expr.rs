@@ -182,28 +182,24 @@ pub fn quantifier_expr(
 ///
 /// # Grammar
 ///
-/// `RANGE_EXPR := NUM_LIT_EXPR .. NUM_LIT_EXPR`
+/// `RANGE_EXPR := EXPR .. EXPR`
 ///
 /// # Examples
 ///
 /// `0..10` corresponds to the mathematical interval `[0, 10)`
 ///
-/// an arithmetic expression evalutes to a number a | b
+/// an arithmetic expression evaluates to a number a | b
 pub fn range_expr(
     input: VelosiTokenStream,
 ) -> IResult<VelosiTokenStream, VelosiParseTreeRangeExpr> {
     let mut loc = input.clone();
-    let (i, (s, _, e)) = tuple((num_lit_expr, dotdot, num_lit_expr))(input)?;
+
+    let (i, (s, _, e)) = tuple((expr, dotdot, expr))(input)?;
+
     loc.span_until_start(&i);
 
-    match (s, e) {
-        (VelosiParseTreeExpr::NumLiteral(s), VelosiParseTreeExpr::NumLiteral(e)) => {
-            let range = VelosiParseTreeRangeExpr::with_loc(s.value, e.value, loc);
-            Ok((i, range))
-            //Ok((i, VelosiParseTreeExpr::Range(range)))
-        }
-        _ => unreachable!(),
-    }
+    let range = VelosiParseTreeRangeExpr::with_loc(s, e, loc);
+    Ok((i, range))
 }
 
 /// pares a function call expression
@@ -826,10 +822,10 @@ fn test_slice() {
     test_parse_and_compare_ok!("foo[3..4]", expr);
     test_parse_and_compare_ok!("foo.bar[0..3]", expr);
     test_parse_and_compare_ok!("foo[1..2]", slice_expr);
+    test_parse_and_compare_ok!("foo[1 + 2..1 + 2]", slice_expr);
+    test_parse_and_compare_ok!("foo[a..b]", slice_expr);
 
-    // currently we don't support this
-    test_parse_and_check_fail!("foo[1+2..1+2]", slice_expr);
-    test_parse_and_check_fail!("foo[a..b]", slice_expr);
+    test_parse_and_check_fail!("foo.bar[a..(b..c)]", slice_expr);
 }
 
 #[test]
@@ -865,12 +861,17 @@ fn test_ifelse_fail() {
 
 #[test]
 fn test_range() {
-    // parse_equal!(range_expr, "a..b", "a..b");
     test_parse_and_compare_ok!("1..2", range_expr);
-
-    // currently we don't support this
-    test_parse_and_check_fail!("a..b", range_expr);
-    test_parse_and_check_fail!("1+2..a+2", range_expr);
+    test_parse_and_compare_ok!("a..b", range_expr);
+    test_parse_and_compare_ok!("a..b", range_expr);
+    test_parse_and_compare_ok!("1 + 2..a + 2", range_expr);
+    test_parse_and_compare_ok!(
+        "1 + 2 + 3 .. a + 4 * 3",
+        range_expr,
+        "(1 + 2) + 3..a + (4 * 3)"
+    );
+    test_parse_and_compare_ok!("(1 + 2)..(a + 2)", range_expr, "1 + 2..a + 2");
+    test_parse_and_check_fail!("1 + 2 + 3 .. ( 1 .. 4)", range_expr);
 }
 
 #[test]

@@ -543,22 +543,38 @@ impl Debug for VelosiParseTreeIfElseExpr {
 #[derive(PartialEq, Eq, Clone)]
 pub struct VelosiParseTreeRangeExpr {
     /// start of the range (including)
-    pub start: u64,
+    pub start: Box<VelosiParseTreeExpr>,
     /// end value of the range (not including)
-    pub end: u64,
+    pub end: Box<VelosiParseTreeExpr>,
     /// location of the range expression in the source tree
     pub loc: VelosiTokenStream,
 }
 
 impl VelosiParseTreeRangeExpr {
     /// constructs a new range expression with default location
-    pub fn with_loc(start: u64, end: u64, loc: VelosiTokenStream) -> Self {
-        Self { start, end, loc }
+    pub fn with_loc(
+        start: VelosiParseTreeExpr,
+        end: VelosiParseTreeExpr,
+        loc: VelosiTokenStream,
+    ) -> Self {
+        Self {
+            start: Box::new(start),
+            end: Box::new(end),
+            loc,
+        }
     }
 
     /// constructs a new range expression with default location
-    pub fn new(start: u64, end: u64) -> Self {
+    pub fn new(start: VelosiParseTreeExpr, end: VelosiParseTreeExpr) -> Self {
         Self::with_loc(start, end, VelosiTokenStream::default())
+    }
+
+    pub fn new_fixed(start: u64, end: u64) -> Self {
+        Self::with_loc(
+            VelosiParseTreeExpr::NumLiteral(VelosiParseTreeNumLiteral::new(start)),
+            VelosiParseTreeExpr::NumLiteral(VelosiParseTreeNumLiteral::new(end)),
+            VelosiTokenStream::default(),
+        )
     }
 }
 
