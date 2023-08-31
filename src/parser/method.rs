@@ -63,7 +63,7 @@ use crate::VelosiTokenStream;
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized method definition as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -137,7 +137,7 @@ pub fn method(input: VelosiTokenStream) -> IResult<VelosiTokenStream, VelosiPars
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized requires clause as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -171,7 +171,7 @@ pub fn requires_clause(
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized ensures clause as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -201,7 +201,7 @@ pub fn ensures_clause(input: VelosiTokenStream) -> IResult<VelosiTokenStream, Ve
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized method body as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -232,7 +232,7 @@ fn method_body(input: VelosiTokenStream) -> IResult<VelosiTokenStream, VelosiPar
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized decorator list as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -272,7 +272,7 @@ pub fn decorator_list(
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized decorator/property as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or

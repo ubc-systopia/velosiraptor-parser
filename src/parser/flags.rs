@@ -54,7 +54,7 @@ use crate::VelosiTokenStream;
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized expression as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -96,7 +96,7 @@ pub fn flags(input: VelosiTokenStream) -> IResult<VelosiTokenStream, VelosiParse
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized flags definition as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
