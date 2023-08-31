@@ -320,8 +320,7 @@ fn test_map_dest_fail() {
 #[test]
 fn test_map_src_ok() {
     test_parse_and_check_ok!("0..0x1000 =>", map_src);
-    // TODO: should have support for this...
-    test_parse_and_check_fail!("i * 0x1000..(i+1) * 0x1000 =>", map_src);
+    test_parse_and_check_ok!("i * 0x1000..(i + 1) * 0x1000 =>", map_src);
 }
 
 #[test]
@@ -343,8 +342,7 @@ fn test_map_element_ok() {
     test_parse_and_compare_ok!("0..4096 => UnitA() @ 4096", map_element);
     test_parse_and_compare_ok!("0..4096 => UnitA() @ 4096 + (i * 4096)", map_element);
 
-    // TODO: should have support for this...
-    test_parse_and_check_fail!("i * 4096..(i+1) * 4096 => UnitA()", map_element);
+    test_parse_and_compare_ok!("i * 4096..(i + 1) * 4096 => UnitA()", map_element);
 }
 
 #[test]
