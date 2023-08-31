@@ -167,8 +167,6 @@ fn listcomprehensionmap(
 ) -> IResult<VelosiTokenStream, VelosiParseTreeMap> {
     let mut loc = input.clone();
 
-    println!("trying list:comp map");
-
     let (i1, (elm, id, expr)) = delimited(
         lbrack,
         tuple((
@@ -178,8 +176,6 @@ fn listcomprehensionmap(
         )),
         rbrack,
     )(input)?;
-
-    println!("trying list:wee");
 
     loc.span_until_start(&i1);
 
