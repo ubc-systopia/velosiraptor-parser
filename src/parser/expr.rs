@@ -86,7 +86,7 @@ use crate::{VelosiKeyword, VelosiTokenKind, VelosiTokenStream};
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized expression as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -118,7 +118,7 @@ pub fn expr(input: VelosiTokenStream) -> IResult<VelosiTokenStream, VelosiParseT
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized expression as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -173,7 +173,7 @@ pub fn quantifier_expr(
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized expression as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -219,7 +219,7 @@ pub fn range_expr(
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized expression as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -316,7 +316,7 @@ macro_rules! binop_parser (
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized constant definition as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -487,7 +487,7 @@ unop_parser!(
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized expression as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -543,7 +543,7 @@ fn term_expr(input: VelosiTokenStream) -> IResult<VelosiTokenStream, VelosiParse
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized expression as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -585,7 +585,7 @@ fn if_else_expr(input: VelosiTokenStream) -> IResult<VelosiTokenStream, VelosiPa
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized expression as a parse tree node.
-/// * Err: The parser did not succed. This is a recoverable error indicating that the parser did
+/// * Err: The parser did not succeed. This is a recoverable error indicating that the parser did
 ///        not recognize the input but another parser might.
 ///
 /// # Grammar
@@ -619,7 +619,7 @@ fn num_lit_expr(input: VelosiTokenStream) -> IResult<VelosiTokenStream, VelosiPa
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized expression as a parse tree node.
-/// * Err: The parser did not succed. This is a recoverable error indicating that the parser did
+/// * Err: The parser did not succeed. This is a recoverable error indicating that the parser did
 ///        not recognize the input but another parser might.
 ///
 /// # Grammar
@@ -651,7 +651,7 @@ fn bool_lit_expr(input: VelosiTokenStream) -> IResult<VelosiTokenStream, VelosiP
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized expression as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -689,7 +689,7 @@ fn slice_expr(input: VelosiTokenStream) -> IResult<VelosiTokenStream, VelosiPars
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized expression as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -726,7 +726,7 @@ fn element_expr(input: VelosiTokenStream) -> IResult<VelosiTokenStream, VelosiPa
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized expression as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or

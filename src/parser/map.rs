@@ -25,7 +25,7 @@
 
 //! # VelosiParser -- Static Map Parser
 //!
-//! Thid modules contains the parser for the static map construct representing a fixed
+//! This module contains the parser for the static map construct representing a fixed
 //! address translation scheme. There are two ways to define a static map:
 //!  1. Explicitly list all the elements in the map.
 //!  2. Using the list comprehension syntax
@@ -65,7 +65,7 @@ use crate::VelosiTokenStream;
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized static map definition as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -108,7 +108,7 @@ pub fn staticmap(input: VelosiTokenStream) -> IResult<VelosiTokenStream, VelosiP
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized explicit static map definition as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -147,7 +147,7 @@ fn explicitmap(input: VelosiTokenStream) -> IResult<VelosiTokenStream, VelosiPar
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized list comprehension static map definition as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -183,7 +183,7 @@ fn listcomprehensionmap(
     Ok((i1, VelosiParseTreeMap::ListComp(Box::new(map))))
 }
 
-/// parses a map elemenet
+/// parses a map element
 ///
 /// # Arguments
 ///
@@ -193,7 +193,7 @@ fn listcomprehensionmap(
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized static map element as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -233,7 +233,7 @@ fn map_element(input: VelosiTokenStream) -> IResult<VelosiTokenStream, VelosiPar
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized source address range of a static map element as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -262,7 +262,7 @@ fn map_src(input: VelosiTokenStream) -> IResult<VelosiTokenStream, VelosiParseTr
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized destination unit of a static map element as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -320,7 +320,7 @@ fn test_map_dest_fail() {
 #[test]
 fn test_map_src_ok() {
     test_parse_and_check_ok!("0..0x1000 =>", map_src);
-    // TODO: sould have support for this...
+    // TODO: should have support for this...
     test_parse_and_check_fail!("i * 0x1000..(i+1) * 0x1000 =>", map_src);
 }
 
@@ -343,7 +343,7 @@ fn test_map_element_ok() {
     test_parse_and_compare_ok!("0..4096 => UnitA() @ 4096", map_element);
     test_parse_and_compare_ok!("0..4096 => UnitA() @ 4096 + (i * 4096)", map_element);
 
-    // TODO: sould have support for this...
+    // TODO: should have support for this...
     test_parse_and_check_fail!("i * 4096..(i+1) * 4096 => UnitA()", map_element);
 }
 

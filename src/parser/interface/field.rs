@@ -63,7 +63,7 @@ use crate::{VelosiParserErr, VelosiTokenStream};
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized interface field as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -90,7 +90,7 @@ pub fn ifacefield(
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized register field as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -142,7 +142,7 @@ pub fn registerfield(
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized memory field as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -198,7 +198,7 @@ pub fn memoryfield(
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized mmio field as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -266,7 +266,7 @@ type MemFiledInfo = (VelosiParseTreeIdentifier, u64, u64);
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized mmio field as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
@@ -294,7 +294,7 @@ pub fn memfieldinfo(input: VelosiTokenStream) -> IResult<VelosiTokenStream, MemF
 ///
 /// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
 ///        recognized field body as a parse tree node.
-/// * Err: The parser did not succed. The return value indicates whether this is:
+/// * Err: The parser did not succeed. The return value indicates whether this is:
 ///
 ///    * Error: a recoverable error indicating that the parser did not recognize the input but
 ///             another parser might, or
