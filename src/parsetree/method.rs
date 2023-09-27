@@ -32,13 +32,10 @@ use std::fmt::{Debug, Display, Formatter, Result as FmtResult};
 
 // used parsetree nodes
 use crate::parsetree::{
-    VelosiParseTreeExpr, VelosiParseTreeIdentifier, VelosiParseTreeParam, VelosiParseTreeType,
+    VelosiParseTreeExpr, VelosiParseTreeIdentifier, VelosiParseTreeParam, VelosiParseTreeProperty,
+    VelosiParseTreeType,
 };
 use crate::VelosiTokenStream;
-
-/// type defining a method property
-pub type VelosiParseTreeMethodProperty =
-    (VelosiParseTreeIdentifier, Option<VelosiParseTreeIdentifier>);
 
 /// Represents a method node
 #[derive(PartialEq, Eq, Clone)]
@@ -46,7 +43,7 @@ pub struct VelosiParseTreeMethod {
     /// the name of the unit (identifier)
     pub name: VelosiParseTreeIdentifier,
     /// properties of the method
-    pub properties: Vec<VelosiParseTreeMethodProperty>,
+    pub properties: Vec<VelosiParseTreeProperty>,
     /// whether this is an abstract method
     pub is_abstract: bool,
     /// whether this is a method to be synthesized
@@ -76,11 +73,7 @@ impl Display for VelosiParseTreeMethod {
                 if i > 0 {
                     write!(f, ", ")?;
                 }
-
-                write!(f, "{}", prop.0.name)?;
-                if let Some(param) = &prop.1 {
-                    write!(f, "({})", param.name)?;
-                }
+                write!(f, "{}", prop)?;
             }
             writeln!(f, "]")?;
         }

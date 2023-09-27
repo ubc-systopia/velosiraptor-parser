@@ -41,6 +41,7 @@ use crate::VelosiTokenStream;
 mod constdef;
 mod expr;
 // mod field;
+mod decorators;
 mod flags;
 mod import;
 mod interface;

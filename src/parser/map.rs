@@ -39,8 +39,8 @@ use nom::{
 };
 
 use crate::error::IResult;
+use crate::parser::decorators::decorator_list;
 use crate::parser::expr::{expr, fn_call_expr, range_expr};
-use crate::parser::method::decorator_list;
 use crate::parser::terminals::{
     at, comma, fatarrow, ident, kw_for, kw_in, kw_mapdef, lbrack, rbrack,
 };

@@ -31,7 +31,7 @@
 use std::fmt::{Debug, Display, Formatter, Result as FmtResult};
 
 // use crate functionality
-use crate::parsetree::VelosiParseTreeIdentifier;
+use crate::parsetree::{VelosiParseTreeIdentifier, VelosiParseTreeProperty};
 use crate::VelosiTokenStream;
 
 use super::VelosiParseTreeParam;
@@ -142,6 +142,8 @@ impl Debug for VelosiParseTreeType {
 pub struct VelosiParseTreeExternType {
     /// the identifier of the type
     pub ident: VelosiParseTreeIdentifier,
+    /// properties of the method
+    pub properties: Vec<VelosiParseTreeProperty>,
     /// the type information
     pub fields: Vec<VelosiParseTreeParam>,
     /// the location of the type clause
@@ -155,7 +157,12 @@ impl VelosiParseTreeExternType {
         fields: Vec<VelosiParseTreeParam>,
         loc: VelosiTokenStream,
     ) -> Self {
-        Self { ident, fields, loc }
+        Self {
+            ident,
+            fields,
+            properties: Vec::new(),
+            loc,
+        }
     }
     /// constructs a new external type with default location
     pub fn new(ident: VelosiParseTreeIdentifier, fields: Vec<VelosiParseTreeParam>) -> Self {
@@ -166,6 +173,16 @@ impl VelosiParseTreeExternType {
 /// Implementation of trait [Display] for [VelosiParseTreeExternType]
 impl Display for VelosiParseTreeExternType {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        if !self.properties.is_empty() {
+            write!(f, "#[")?;
+            for (i, prop) in self.properties.iter().enumerate() {
+                if i > 0 {
+                    write!(f, ", ")?;
+                }
+                write!(f, "{}", prop)?;
+            }
+            writeln!(f, "]")?;
+        }
         writeln!(f, "extern type {} {{", self.ident)?;
         for field in &self.fields {
             writeln!(f, "  {field}")?;
