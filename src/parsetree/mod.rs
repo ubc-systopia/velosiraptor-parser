@@ -32,6 +32,7 @@ use std::fmt::{Debug, Display, Formatter, Result as FmtResult};
 
 /// parse tree modules
 mod consts;
+mod decorator;
 mod expr;
 mod field;
 mod identifier;
@@ -46,6 +47,7 @@ mod unit;
 
 /// export of the parse tree nodes
 pub use consts::VelosiParseTreeConstDef;
+pub use decorator::VelosiParseTreeProperty;
 pub use expr::{
     VelosiParseTreeBinOp, VelosiParseTreeBinOpExpr, VelosiParseTreeBoolLiteral,
     VelosiParseTreeElementExpr, VelosiParseTreeExpr, VelosiParseTreeFnCallExpr,
@@ -66,7 +68,7 @@ pub use map::{
     VelosiParseTreeMap, VelosiParseTreeMapElement, VelosiParseTreeMapExplicit,
     VelosiParseTreeMapListComp,
 };
-pub use method::{VelosiParseTreeMethod, VelosiParseTreeMethodProperty};
+pub use method::VelosiParseTreeMethod;
 pub use params::VelosiParseTreeParam;
 pub use state::{
     VelosiParseTreeState, VelosiParseTreeStateField, VelosiParseTreeStateFieldMemory,

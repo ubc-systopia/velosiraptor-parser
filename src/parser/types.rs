@@ -38,6 +38,7 @@ use nom::{
 // used crate functionality
 use crate::error::IResult;
 
+use crate::parser::decorators::decorator_list;
 use crate::parser::parameter::param;
 use crate::parser::terminals::{comma, ident, kw_extern, kw_type, lbrace, rbrace};
 use crate::parsetree::VelosiParseTreeExternType;
@@ -76,7 +77,11 @@ pub fn extern_type(
 ) -> IResult<VelosiTokenStream, VelosiParseTreeExternType> {
     let mut loc = input.clone();
 
-    let (i1, _) = tuple((kw_extern, kw_type))(input)?;
+    // parse the decorator #[foo]
+    let (i0, props) = opt(decorator_list)(input)?;
+
+    // parse extern type
+    let (i1, _) = tuple((kw_extern, kw_type))(i0)?;
 
     let (i2, ident) = cut(ident)(i1)?;
     let (i3, fields) = cut(delimited(
@@ -87,7 +92,13 @@ pub fn extern_type(
 
     loc.span_until_start(&i3);
 
-    let ty = VelosiParseTreeExternType { ident, fields, loc };
+    let properties = props.unwrap_or_default();
+    let ty = VelosiParseTreeExternType {
+        ident,
+        fields,
+        properties,
+        loc,
+    };
 
     Ok((i3, ty))
 }

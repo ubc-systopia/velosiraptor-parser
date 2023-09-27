@@ -34,7 +34,7 @@ use std::fmt::{Debug, Display, Formatter, Result as FmtResult};
 // use crate functionality
 use crate::parsetree::{
     VelosiParseTreeExpr, VelosiParseTreeFnCallExpr, VelosiParseTreeIdentifier,
-    VelosiParseTreeMethodProperty, VelosiParseTreeRangeExpr,
+    VelosiParseTreeProperty, VelosiParseTreeRangeExpr,
 };
 use crate::VelosiTokenStream;
 
@@ -138,7 +138,7 @@ pub struct VelosiParseTreeMapListComp {
     /// range defining the entries
     pub range: VelosiParseTreeRangeExpr,
     /// properties of the map
-    pub properties: Vec<VelosiParseTreeMethodProperty>,
+    pub properties: Vec<VelosiParseTreeProperty>,
     /// location of the list comprehension map in the source file
     pub loc: VelosiTokenStream,
 }

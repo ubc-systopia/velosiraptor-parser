@@ -31,19 +31,20 @@
 use nom::{
     branch::alt,
     combinator::{cut, opt},
-    multi::{many0, separated_list1},
+    multi::many0,
     sequence::{delimited, preceded, terminated, tuple},
 };
 
 // used crate functionality
 use crate::error::IResult;
+use crate::parser::decorators::decorator_list;
 use crate::parser::expr::{expr, quantifier_expr};
 use crate::parser::parameter::param_list;
 use crate::parser::terminals::{
-    comma, hashtag, ident, kw_abstract, kw_ensures, kw_extern, kw_fn, kw_requires, kw_synth,
-    lbrace, lbrack, lparen, rarrow, rbrace, rbrack, rparen, semicolon, typeinfo,
+    ident, kw_abstract, kw_ensures, kw_extern, kw_fn, kw_requires, kw_synth, lbrace, rarrow,
+    rbrace, semicolon, typeinfo,
 };
-use crate::parsetree::{VelosiParseTreeExpr, VelosiParseTreeMethod, VelosiParseTreeMethodProperty};
+use crate::parsetree::{VelosiParseTreeExpr, VelosiParseTreeMethod};
 use crate::VelosiTokenStream;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -220,83 +221,6 @@ fn method_body(input: VelosiTokenStream) -> IResult<VelosiTokenStream, VelosiPar
     delimited(lbrace, cut(expr), cut(rbrace))(input)
 }
 
-/// parses a decorator/property list of a method
-///
-/// This function parses a function decorator/property
-///
-/// # Arguments
-///
-/// * `input` - input token stream to be parsed
-///
-/// # Results
-///
-/// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
-///        recognized decorator list as a parse tree node.
-/// * Err: The parser did not succeed. The return value indicates whether this is:
-///
-///    * Error: a recoverable error indicating that the parser did not recognize the input but
-///             another parser might, or
-///    * Failure: a fatal failure indicating the parser recognized the input but failed to parse it
-///               and that another parser would fail.
-///
-/// # Grammar
-///
-/// `DECORATOR := KW_HASHTAG RBRAK DECORATOR_ELEMENT RBRAK`
-///
-/// # Example
-///
-/// * `#[foo]`
-///
-pub fn decorator_list(
-    input: VelosiTokenStream,
-) -> IResult<VelosiTokenStream, Vec<VelosiParseTreeMethodProperty>> {
-    let (i1, _) = hashtag(input)?;
-
-    // [ ident ]
-    let (i2, decorators) = cut(delimited(
-        lbrack,
-        separated_list1(comma, decorator_element),
-        rbrack,
-    ))(i1)?;
-
-    Ok((i2, decorators))
-}
-
-/// parses a decorator/property element
-///
-/// # Arguments
-///
-/// * `input` - input token stream to be parsed
-///
-/// # Results
-///
-/// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
-///        recognized decorator/property as a parse tree node.
-/// * Err: The parser did not succeed. The return value indicates whether this is:
-///
-///    * Error: a recoverable error indicating that the parser did not recognize the input but
-///             another parser might, or
-///    * Failure: a fatal failure indicating the parser recognized the input but failed to parse it
-///               and that another parser would fail.
-///
-/// # Grammar
-///
-/// `DECORATOR_ELEMENT := IDENT (LPAREN IDENT RPAREN)?`
-///
-/// # Examples
-///
-///  * `foo`
-///  * `bar(a)`
-///
-///
-fn decorator_element(
-    input: VelosiTokenStream,
-) -> IResult<VelosiTokenStream, VelosiParseTreeMethodProperty> {
-    let (i1, name) = ident(input)?;
-    let (i2, arg) = opt(delimited(lparen, cut(ident), cut(rparen)))(i1)?;
-    Ok((i2, (name, arg)))
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Tests
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -306,32 +230,6 @@ use velosilexer::VelosiLexer;
 
 #[cfg(test)]
 use crate::{test_parse_and_check_fail, test_parse_and_check_ok};
-
-#[test]
-fn test_decorator_ok() {
-    test_parse_and_check_ok!("foo", decorator_element);
-    test_parse_and_check_ok!("foo(bar)", decorator_element);
-}
-
-#[test]
-fn test_decorator_fail() {
-    test_parse_and_check_fail!("foo(bar, baz)", decorator_element);
-    test_parse_and_check_fail!("foo[bar, baz]", decorator_element);
-}
-
-#[test]
-fn test_decorator_list_ok() {
-    test_parse_and_check_ok!("#[foo]", decorator_list);
-    test_parse_and_check_ok!("#[foo(bar)]", decorator_list);
-    test_parse_and_check_ok!("#[foo(bar), baz]", decorator_list);
-}
-
-#[test]
-fn test_decorator_list_fail() {
-    test_parse_and_check_fail!("#[]", decorator_list);
-    test_parse_and_check_fail!("#[foo(bar),]", decorator_list);
-    test_parse_and_check_fail!("#[foo(bar) baz]", decorator_list);
-}
 
 #[test]
 fn test_method_body_ok() {
