@@ -127,7 +127,7 @@ fn decorator_element(
         Vec::new()
     };
 
-    loc.expand_until_start(&i2);
+    loc.span_until_start(&i2);
 
     let res = VelosiParseTreeProperty {
         ident: name,
