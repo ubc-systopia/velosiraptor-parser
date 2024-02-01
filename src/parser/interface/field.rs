@@ -43,7 +43,8 @@ use crate::error::{IResult, VelosiParserErrBuilder};
 /// library internal includes
 use crate::parser::terminals::*;
 use crate::parsetree::{
-    VelosiParseTreeIdentifier, VelosiParseTreeInterfaceField, VelosiParseTreeInterfaceFieldMemory,
+    VelosiParseTreeIdentifier, VelosiParseTreeInterfaceField,
+    VelosiParseTreeInterfaceFieldInstruction, VelosiParseTreeInterfaceFieldMemory,
     VelosiParseTreeInterfaceFieldMmio, VelosiParseTreeInterfaceFieldNode,
     VelosiParseTreeInterfaceFieldRegister,
 };
@@ -77,7 +78,7 @@ use crate::{VelosiParserErr, VelosiTokenStream};
 pub fn ifacefield(
     input: VelosiTokenStream,
 ) -> IResult<VelosiTokenStream, VelosiParseTreeInterfaceField> {
-    alt((memoryfield, registerfield, mmiofield))(input)
+    alt((memoryfield, registerfield, mmiofield, instrfield))(input)
 }
 
 /// Parses and consumes a register interface field definition
@@ -242,6 +243,58 @@ pub fn mmiofield(
 
     let res = VelosiParseTreeInterfaceFieldMmio::with_loc(name, base, offset, size, nodes, loc);
     Ok((i3, VelosiParseTreeInterfaceField::Mmio(res)))
+}
+
+/// Parses and consumes a instr interface field definition
+///
+/// # Arguments
+///
+/// * `input` - input token stream to be parsed
+///
+/// # Results
+///
+/// * Ok:  The parser succeeded. The return value is a tuple of the remaining input and the
+///        recognized mmio field as a parse tree node.
+/// * Err: The parser did not succeed. The return value indicates whether this is:
+///
+///    * Error: a recoverable error indicating that the parser did not recognize the input but
+///             another parser might, or
+///    * Failure: a fatal failure indicating the parser recognized the input but failed to parse it
+///             and that another parser would fail.
+///
+/// # Grammar
+///
+/// `INSTRFIELD := KW_INSTR LBRAK NUM RBRACK LBRACE SEPLIST(COMMA, IFACEFIELDBODY) RBRACE`
+///
+pub fn instrfield(
+    input: VelosiTokenStream,
+) -> IResult<VelosiTokenStream, VelosiParseTreeInterfaceField> {
+    let mut loc = input.clone();
+
+    // if we have the instr keyword
+    let (i1, _) = kw_instr(input)?;
+
+    let (i2, name) = cut(ident)(i1)?;
+
+    let (i3, nodes) = opt(delimited(
+        lbrace,
+        terminated(separated_list0(comma, interfacefieldbody), opt(comma)),
+        cut(rbrace),
+    ))(i2)?;
+
+    loc.span_until_start(&i3);
+
+    let nodes = if let Some(nodes) = nodes {
+        if nodes.is_empty() {
+            return Err(empty_field_err(i3));
+        }
+        nodes
+    } else {
+        Vec::new()
+    };
+
+    let res = VelosiParseTreeInterfaceFieldInstruction::with_loc(name, nodes, loc);
+    Ok((i3, VelosiParseTreeInterfaceField::Instruction(res)))
 }
 
 fn empty_field_err(loc: VelosiTokenStream) -> Err<VelosiParserErr> {
@@ -567,4 +620,62 @@ fn test_mmio_field_fail_error_messages() {
     // memory field information instead of register field information
     test_parse_and_compare_file_fail!("interface/parts/mmiofield_01_field_info_wrong", mmiofield);
     test_parse_and_compare_file_fail!("interface/parts/mmiofield_02_field_info_wrong_2", mmiofield);
+}
+
+#[test]
+fn test_instr_field_ok() {
+    test_parse_and_compare_ok!(
+        "instr foo { Layout {} }",
+        instrfield,
+        "instr foo {\n  Layout {\n  },\n}"
+    );
+    // trailing comma is ok
+    test_parse_and_compare_ok!(
+        "instr foo { Layout {}, }",
+        instrfield,
+        "instr foo {\n  Layout {\n  },\n}"
+    );
+    // it's ok to have the elements twice
+    test_parse_and_compare_ok!(
+        "instr foo { Layout {}, Layout {}, }",
+        instrfield,
+        "instr foo {\n  Layout {\n  },\n  Layout {\n  },\n}"
+    );
+
+    test_parse_and_compare_ok!(
+        "instr foo { WriteActions {}, WriteActions {}, }",
+        instrfield,
+        "instr foo {\n  WriteActions {\n  },\n  WriteActions {\n  },\n}"
+    );
+
+    test_parse_and_compare_ok!(
+        "instr foo { ReadActions {}, ReadActions {}, }",
+        instrfield,
+        "instr foo {\n  ReadActions {\n  },\n  ReadActions {\n  },\n}"
+    );
+    // different orders of the body elements are ok
+    test_parse_and_compare_ok!(
+        "instr foo { Layout {}, WriteActions{}, ReadActions{} }",
+        instrfield,
+        "instr foo {\n  Layout {\n  },\n  WriteActions {\n  },\n  ReadActions {\n  },\n}"
+    );
+    test_parse_and_compare_ok!(
+        "instr foo { ReadActions {}, Layout {}, WriteActions{}, }",
+        instrfield,
+        "instr foo {\n  ReadActions {\n  },\n  Layout {\n  },\n  WriteActions {\n  },\n}"
+    );
+    test_parse_and_compare_ok!(
+        "instr foo { WriteActions {}, Layout {}, ReadActions{} }",
+        instrfield,
+        "instr foo {\n  WriteActions {\n  },\n  Layout {\n  },\n  ReadActions {\n  },\n}"
+    );
+}
+
+#[test]
+fn test_instr_field_fail() {
+    // empty field definition
+    test_parse_and_check_fail!("instr foo {}", instrfield);
+
+    // parameters
+    test_parse_and_check_fail!("instr foo [8]", instrfield);
 }

@@ -60,9 +60,10 @@ pub use identifier::VelosiParseTreeIdentifier;
 pub use import::VelosiParseTreeImport;
 pub use interface::{
     VelosiParseTreeInterface, VelosiParseTreeInterfaceAction, VelosiParseTreeInterfaceActions,
-    VelosiParseTreeInterfaceField, VelosiParseTreeInterfaceFieldMemory,
-    VelosiParseTreeInterfaceFieldMmio, VelosiParseTreeInterfaceFieldNode,
-    VelosiParseTreeInterfaceFieldRegister, VelosiParseTreeInterfaceLayout,
+    VelosiParseTreeInterfaceField, VelosiParseTreeInterfaceFieldInstruction,
+    VelosiParseTreeInterfaceFieldMemory, VelosiParseTreeInterfaceFieldMmio,
+    VelosiParseTreeInterfaceFieldNode, VelosiParseTreeInterfaceFieldRegister,
+    VelosiParseTreeInterfaceLayout,
 };
 pub use map::{
     VelosiParseTreeMap, VelosiParseTreeMapElement, VelosiParseTreeMapExplicit,
