@@ -82,8 +82,10 @@ pub enum VelosiKeyword {
     Mem,
     /// field that is a register
     Reg,
-    /// field that is a memory-mapped regsiter
+    /// field that is a memory-mapped registers
     Mmio,
+    /// a special instruction that is being executed
+    Instr,
 
     //
     // interface descriptions
@@ -108,7 +110,7 @@ pub enum VelosiKeyword {
     //
     // control flow and expressions
     //
-    /// conditional statemt
+    /// conditional statement
     If,
     /// conditional else branch
     Else,
@@ -189,6 +191,7 @@ impl VelosiKeyword {
             VelosiKeyword::Mem => "mem",
             VelosiKeyword::Reg => "reg",
             VelosiKeyword::Mmio => "mmio",
+            VelosiKeyword::Instr => "instr",
 
             // interface descriptions
             VelosiKeyword::ReadActions => "ReadActions",
@@ -256,6 +259,7 @@ impl<'a> TryFrom<&'a str> for VelosiKeyword {
             "reg" => Ok(VelosiKeyword::Reg),
             "mem" => Ok(VelosiKeyword::Mem),
             "mmio" => Ok(VelosiKeyword::Mmio),
+            "instr" => Ok(VelosiKeyword::Instr),
             //  interface descriptions
             "ReadActions" => Ok(VelosiKeyword::ReadActions),
             "WriteActions" => Ok(VelosiKeyword::WriteActions),
@@ -702,6 +706,8 @@ fn test_enum_str() {
     assert_eq!(VelosiKeyword::Reg.as_str(), "reg");
     assert_eq!("mmio".try_into(), Ok(VelosiKeyword::Mmio));
     assert_eq!(VelosiKeyword::Mmio.as_str(), "mmio");
+    assert_eq!("instr".try_into(), Ok(VelosiKeyword::Instr));
+    assert_eq!(VelosiKeyword::Instr.as_str(), "instr");
 
     assert_eq!("ReadActions".try_into(), Ok(VelosiKeyword::ReadActions));
     assert_eq!(VelosiKeyword::ReadActions.as_str(), "ReadActions");

@@ -238,6 +238,7 @@ keywordparser!(pub kw_mapdef, VelosiKeyword::Map);
 keywordparser!(pub kw_mem, VelosiKeyword::Mem);
 keywordparser!(pub kw_reg, VelosiKeyword::Reg);
 keywordparser!(pub kw_mmio, VelosiKeyword::Mmio);
+keywordparser!(pub kw_instr, VelosiKeyword::Instr);
 
 keywordparser!(pub kw_readaction, VelosiKeyword::ReadActions);
 keywordparser!(pub kw_writeaction, VelosiKeyword::WriteActions);

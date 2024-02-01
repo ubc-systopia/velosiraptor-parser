@@ -486,6 +486,69 @@ impl Debug for VelosiParseTreeInterfaceFieldRegister {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// Interface Instruction Field
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// Represents a instruction interface field
+#[derive(PartialEq, Eq, Clone)]
+pub struct VelosiParseTreeInterfaceFieldInstruction {
+    /// the identifer of the field
+    pub name: VelosiParseTreeIdentifier,
+    /// nodes of the field
+    pub nodes: Vec<VelosiParseTreeInterfaceFieldNode>,
+    /// location of the field in the source file
+    pub loc: VelosiTokenStream,
+}
+
+impl VelosiParseTreeInterfaceFieldInstruction {
+    /// constructs a new register interface field
+    pub fn with_loc(
+        name: VelosiParseTreeIdentifier,
+        nodes: Vec<VelosiParseTreeInterfaceFieldNode>,
+        loc: VelosiTokenStream,
+    ) -> Self {
+        Self { name, nodes, loc }
+    }
+
+    /// constructs a new register interface field with default location
+    pub fn new(
+        name: VelosiParseTreeIdentifier,
+        nodes: Vec<VelosiParseTreeInterfaceFieldNode>,
+    ) -> Self {
+        Self::with_loc(name, nodes, VelosiTokenStream::default())
+    }
+}
+
+/// Implementation of [Display] for [VelosiParseTreeInterfaceFieldInstruction]
+impl Display for VelosiParseTreeInterfaceFieldInstruction {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        write!(f, "instr {}", self.name)?;
+        if !self.nodes.is_empty() {
+            writeln!(f, " {{")?;
+            for node in &self.nodes {
+                let formatted = format!("{node}");
+                for (i, l) in formatted.lines().enumerate() {
+                    if i > 0 {
+                        writeln!(f)?;
+                    }
+                    write!(f, "  {l}")?;
+                }
+                writeln!(f, ",")?;
+            }
+            write!(f, "}}")?;
+        }
+        Ok(())
+    }
+}
+
+/// Implementation of [Debug] for [VelosiParseTreeInterfaceFieldInstruction]
+impl Debug for VelosiParseTreeInterfaceFieldInstruction {
+    fn fmt(&self, format: &mut Formatter) -> FmtResult {
+        Display::fmt(&self, format)
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // Interface Fields
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -495,6 +558,7 @@ pub enum VelosiParseTreeInterfaceField {
     Memory(VelosiParseTreeInterfaceFieldMemory),
     Mmio(VelosiParseTreeInterfaceFieldMmio),
     Register(VelosiParseTreeInterfaceFieldRegister),
+    Instruction(VelosiParseTreeInterfaceFieldInstruction),
 }
 
 /// Implementation of [Display] for [VelosiParseTreeInterfaceField]
@@ -505,6 +569,7 @@ impl Display for VelosiParseTreeInterfaceField {
             Memory(field) => Display::fmt(field, f),
             Mmio(field) => Display::fmt(field, f),
             Register(field) => Display::fmt(field, f),
+            Instruction(field) => Display::fmt(field, f),
         }
     }
 }
