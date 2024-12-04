@@ -136,7 +136,7 @@ impl VelosiParseTreeField {
     }
 }
 
-/// Implementation of [Debug] for [VelosiParseTreeField]
+/// Implementation of [Display] for [VelosiParseTreeField]
 impl Display for VelosiParseTreeField {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         write!(f, "{} [", self.name)?;

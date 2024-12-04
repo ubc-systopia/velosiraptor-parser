@@ -40,7 +40,7 @@ use crate::parsetree::{VelosiParseTreeIdentifier, VelosiParseTreeParam};
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Represents an operator for a binary expression
-#[derive(PartialEq, Eq, Clone, Copy, Debug)]
+#[derive(PartialEq, Eq, Clone, Copy)]
 pub enum VelosiParseTreeBinOp {
     // arithmetic operators
     Plus,
@@ -90,6 +90,13 @@ impl Display for VelosiParseTreeBinOp {
             Lor => write!(format, "||"),
             Implies => write!(format, "==>"),
         }
+    }
+}
+
+/// Implementation of the [Display] trait for the [VelosiParseTreeConstDef] struct
+impl Debug for VelosiParseTreeBinOp {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        Display::fmt(&self, f)
     }
 }
 
@@ -162,7 +169,7 @@ impl Debug for VelosiParseTreeBinOpExpr {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Represents an operator for a unary expression
-#[derive(PartialEq, Eq, Clone, Copy, Debug)]
+#[derive(PartialEq, Eq, Clone, Copy)]
 pub enum VelosiParseTreeUnOp {
     // arithmetic operators
     Not,
@@ -178,6 +185,13 @@ impl Display for VelosiParseTreeUnOp {
             Not => write!(format, "~"),
             LNot => write!(format, "!"),
         }
+    }
+}
+
+/// Implementation of the [Debug] trait for the [VelosiParseTreeUnOp] struct
+impl Debug for VelosiParseTreeUnOp {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        Display::fmt(&self, f)
     }
 }
 
@@ -230,7 +244,7 @@ impl Debug for VelosiParseTreeUnOpExpr {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// representation of a quantifier
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[derive(PartialEq, Eq, Clone, Copy)]
 pub enum VelosiParseTreeQuantifier {
     Forall,
     Exists,
@@ -244,6 +258,13 @@ impl Display for VelosiParseTreeQuantifier {
             Forall => write!(format, "forall"),
             Exists => write!(format, "exists"),
         }
+    }
+}
+
+/// Implementation of the [Display] trait for the [VelosiParseTreeQuantifier] struct
+impl Debug for VelosiParseTreeQuantifier {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        Display::fmt(&self, f)
     }
 }
 
