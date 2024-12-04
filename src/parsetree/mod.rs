@@ -86,7 +86,7 @@ pub use unit::{
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Represents parse tree nodes
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Eq, Clone)]
 pub enum VelosiParseTreeContextNode {
     Const(VelosiParseTreeConstDef),
     Import(VelosiParseTreeImport),
@@ -109,12 +109,26 @@ impl Display for VelosiParseTreeContextNode {
     }
 }
 
+/// Implement [Debug] for [VelosiParseTree]
+impl Debug for VelosiParseTreeContextNode {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        use VelosiParseTreeContextNode::*;
+        match self {
+            Const(s) => Debug::fmt(&s, f),
+            Import(s) => Debug::fmt(&s, f),
+            Unit(s) => Debug::fmt(&s, f),
+            Flags(s) => Debug::fmt(&s, f),
+            Type(s) => Debug::fmt(&s, f),
+        }
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Parse Tree Root Node
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Represents the parse tree root node
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Eq, Clone)]
 pub struct VelosiParseTree {
     /// List of nodes in the current parse tree context
     pub nodes: Vec<VelosiParseTreeContextNode>,
@@ -179,5 +193,12 @@ impl Display for VelosiParseTree {
         }
         writeln!(f, "---------------------------------------------")?;
         Ok(())
+    }
+}
+
+/// Implementation of the [Display] trait for the [VelosiParseTree] struct
+impl Debug for VelosiParseTree {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        Display::fmt(&self, f)
     }
 }
