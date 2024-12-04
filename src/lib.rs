@@ -61,9 +61,9 @@ pub use parser::{parse_expr, parse_interface, parse_method, parse_state, parse_s
 // custom error definitions
 custom_error! {pub VelosiParserError
     ReadSourceFile {e: Error} = "Could not read the source file.",
-    LexingFailure { e: VelosiParserErr }   = "Lexing failed.",
-    ParsingFailure { e: VelosiParserErr } = "Parsing failed.",
-    ImportFailure { e: VelosiParserErr } = "Import failed.",
+    LexingFailure { e: Box<VelosiParserErr> }   = "Lexing failed.",
+    ParsingFailure { e: Box<VelosiParserErr> } = "Parsing failed.",
+    ImportFailure { e: Box<VelosiParserErr> } = "Import failed.",
 }
 
 /// Converting [VelosiLexerError] -> [VelosiParserError]
@@ -71,13 +71,13 @@ impl From<VelosiLexerError> for VelosiParserError {
     fn from(err: VelosiLexerError) -> Self {
         match err {
             VelosiLexerError::ReadSourceFile { e } => VelosiParserError::ReadSourceFile { e },
-            VelosiLexerError::LexingFailure { r } => {
-                VelosiParserError::LexingFailure { e: r.into() }
-            }
+            VelosiLexerError::LexingFailure { r } => VelosiParserError::LexingFailure {
+                e: Box::new(r.into()),
+            },
             VelosiLexerError::LexingIncomplete => {
                 let message = "Lexing incomplete: input stream ended unexpectedly.";
                 let e = VelosiParserErrBuilder::new(message.to_string()).build();
-                VelosiParserError::LexingFailure { e }
+                VelosiParserError::LexingFailure { e: Box::new(e) }
             }
         }
     }
@@ -224,12 +224,12 @@ impl VelosiParser {
                     Ok(ptree)
                 }
             }
-            Err(nom::Err::Error(e)) => Err(VelosiParserError::ParsingFailure { e }),
-            Err(nom::Err::Failure(e)) => Err(VelosiParserError::ParsingFailure { e }),
+            Err(nom::Err::Error(e)) => Err(VelosiParserError::ParsingFailure { e: Box::new(e) }),
+            Err(nom::Err::Failure(e)) => Err(VelosiParserError::ParsingFailure { e: Box::new(e) }),
             Err(nom::Err::Incomplete(_)) => {
                 let message = "Parsing incomplete: input stream ended unexpectedly.";
                 let e = VelosiParserErrBuilder::new(message.to_string()).build();
-                Err(VelosiParserError::ParsingFailure { e })
+                Err(VelosiParserError::ParsingFailure { e: Box::new(e) })
             }
         }
     }
@@ -275,7 +275,7 @@ impl VelosiParser {
                         .build();
 
                     return Err(VelosiParserError::ImportFailure {
-                        e: VelosiParserErr::Stack(vec![err1, err2]),
+                        e: Box::new(VelosiParserErr::Stack(vec![Box::new(err1), Box::new(err2)])),
                     });
                 }
                 None => {
@@ -305,7 +305,7 @@ impl VelosiParser {
                     .add_tokstream(import.loc().clone())
                     .add_hint(hint.to_string())
                     .build();
-                return Err(VelosiParserError::ImportFailure { e });
+                return Err(VelosiParserError::ImportFailure { e: Box::new(e) });
             }
 
             // no duplicate import, no cycile, we can parse the file now, and recurse
@@ -325,7 +325,7 @@ impl VelosiParser {
                         .add_tokstream(import.loc().clone())
                         .add_hint(hint.to_string())
                         .build();
-                    return Err(VelosiParserError::ImportFailure { e });
+                    return Err(VelosiParserError::ImportFailure { e: Box::new(e) });
                 }
                 Err(VelosiParserError::ImportFailure { e }) => {
                     let msg = format!("failed to resolve {filename}");
@@ -335,8 +335,8 @@ impl VelosiParser {
                         .add_hint(hint.to_string())
                         .build();
 
-                    let e = VelosiParserErr::Stack(vec![e, err]);
-                    return Err(VelosiParserError::ImportFailure { e });
+                    let e = VelosiParserErr::Stack(vec![e, Box::new(err)]);
+                    return Err(VelosiParserError::ImportFailure { e: Box::new(e) });
                 }
                 Err(VelosiParserError::ParsingFailure { e }) => {
                     let msg = format!("failed to resolve {filename}");
@@ -346,8 +346,8 @@ impl VelosiParser {
                         .add_hint(hint.to_string())
                         .build();
 
-                    let e = VelosiParserErr::Stack(vec![e, err]);
-                    return Err(VelosiParserError::ImportFailure { e });
+                    let e = VelosiParserErr::Stack(vec![e, Box::new(err)]);
+                    return Err(VelosiParserError::ImportFailure { e: Box::new(e) });
                 }
                 Err(e) => {
                     panic!("unhandled error: {:?}", e)

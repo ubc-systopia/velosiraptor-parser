@@ -318,6 +318,7 @@ macro_rules! binop_parser (
 ///             another parser might, or
 ///    * Failure: a fatal failure indicating the parser recognized the input but failed to parse it
 ///             and that another parser would fail.
+///
 /// This constructs a unuary operator parser for one or more operators with the same precedence.
 /// The unary oparator may or may not be present.
 /// The macro supports multiple `(op, parser)` tuples as arguments.
