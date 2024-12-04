@@ -82,12 +82,12 @@ impl VelosiParserErrBuilder {
 
     /// Constructs the [VelosiParserErr] from the current builder
     pub fn build(mut self) -> VelosiParserErr {
-        VelosiParserErr::Custom(VelosiParserErrCustom {
+        VelosiParserErr::Custom(Box::new(VelosiParserErrCustom {
             message: self.message.clone(),
             kinds: Vec::new(),
             hint: self.hint.take(),
             tokstream: self.tokstream.take().unwrap_or_default(),
-        })
+        }))
     }
 }
 
@@ -322,34 +322,34 @@ impl Display for VelosiParserErrExpected {
 /// Defines a parser error
 #[derive(PartialEq, Eq, Debug)]
 pub enum VelosiParserErr {
-    Expected(VelosiParserErrExpected),
+    Expected(Box<VelosiParserErrExpected>),
     Kind(ErrorKind),
-    Custom(VelosiParserErrCustom),
-    Lexer(VelosiLexerErr),
-    Stack(Vec<VelosiParserErr>),
+    Custom(Box<VelosiParserErrCustom>),
+    Lexer(Box<VelosiLexerErr>),
+    Stack(Vec<Box<VelosiParserErr>>),
 }
 
 impl VelosiParserErr {
     pub fn from_expected(position: VelosiTokenStream, kind: VelosiTokenKind) -> Self {
-        VelosiParserErr::Expected(VelosiParserErrExpected::new(position, kind))
+        VelosiParserErr::Expected(Box::new(VelosiParserErrExpected::new(position, kind)))
     }
 }
 
 impl From<VelosiParserErrExpected> for VelosiParserErr {
     fn from(err: VelosiParserErrExpected) -> Self {
-        VelosiParserErr::Expected(err)
+        VelosiParserErr::Expected(Box::new(err))
     }
 }
 
 impl From<VelosiParserErrCustom> for VelosiParserErr {
     fn from(err: VelosiParserErrCustom) -> Self {
-        VelosiParserErr::Custom(err)
+        VelosiParserErr::Custom(Box::new(err))
     }
 }
 
 impl From<VelosiLexerErr> for VelosiParserErr {
     fn from(err: VelosiLexerErr) -> Self {
-        VelosiParserErr::Lexer(err)
+        VelosiParserErr::Lexer(Box::new(err))
     }
 }
 
